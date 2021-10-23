@@ -40,6 +40,12 @@ io.on('connection', socket =>{
         });
     });
 
+    // Listen for chatMessage
+    socket.on('chatMessage', msg => {
+        const user = getCurrentUser(socket.id);
+
+        io.to(user.room).emit('message', formatMessage(user.username, msg));
+    });
     //Runs when client disconnects
     socket.on('disconnect', ()=>{
         const user = userLeave(socket.id);
@@ -57,4 +63,4 @@ io.on('connection', socket =>{
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, ()=> console.log(`Server is running on port${PORT}`));
+server.listen(PORT, ()=> console.log(`Server is running on port ${PORT}`));
